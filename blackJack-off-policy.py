@@ -44,7 +44,7 @@ if __name__ == '__main__':
         observation = env.reset()
         done = False
         while not done:
-            action = np.random.choice(behaviorPolicy[state])
+            action = np.random.choice(behaviorPolicy[observation])
             observation_, reward, done, info = env.step(action)
             memory.append((observation[0], observation[1], observation[2], action, reward))
             observation = observation_
@@ -86,7 +86,7 @@ if __name__ == '__main__':
         observation = env.reset()
         done = False
         while not done:
-            action = targetPolicy[state]
+            action = targetPolicy[observation]
             observation_, reward, done, info = env.step(action)            
             observation = observation_
         totalReward += reward
