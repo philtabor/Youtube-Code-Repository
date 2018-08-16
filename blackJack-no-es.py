@@ -1,7 +1,6 @@
 import gym
 import numpy as np
 import matplotlib.pyplot as plt
-from utils import plot_policy
 
 if __name__ == '__main__':
     env = gym.make('Blackjack-v0')
@@ -109,5 +108,4 @@ if __name__ == '__main__':
     draws /= numEpisodes
     print('win rate', wins, 'loss rate', losses, 'draw rate', draws)
     plt.plot(rewards)
-    plt.show()
-    
+    plt.show()    
