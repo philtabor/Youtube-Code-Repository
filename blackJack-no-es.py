@@ -38,7 +38,7 @@ if __name__ == '__main__':
         observation = env.reset()
         done = False
         while not done:
-            action = policy[state]
+            action = policy[observation]
             observation_, reward, done, info = env.step(action)
             memory.append((observation[0], observation[1], observation[2], action, reward))
             observation = observation_
@@ -90,7 +90,7 @@ if __name__ == '__main__':
         observation = env.reset()
         done = False
         while not done:
-            action = policy[state]
+            action = policy[observation]
             observation_, reward, done, info = env.step(action)            
             observation = observation_
         totalReward += reward
