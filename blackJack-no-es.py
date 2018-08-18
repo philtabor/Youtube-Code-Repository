@@ -45,7 +45,6 @@ if __name__ == '__main__':
         memory.append((observation[0], observation[1], observation[2], action, reward))    
 
         G = 0
-        W = 1
         last = True
         for playerSum, dealerCard, usableAce, action, reward in reversed(memory):
             if last:
