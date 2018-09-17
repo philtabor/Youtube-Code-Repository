@@ -4,10 +4,10 @@ You can find me at <a href="youtube.com/MachineLearningWithPhil"> Machine Learni
 
 <h2> CNN.py </h2>
 
-Simple implementation of a convolutional neural network in TensorFlow, version 1.5. 
-Video tutorial on this code can be found at https://youtu.be/azFyHS0odcM
-Achieves accuracy of 98% after 10 epochs of training
-Requires data from http://yann.lecun.com/exdb/mnist/
+Simple implementation of a convolutional neural network in TensorFlow, version 1.5. <br>
+Video tutorial on this code can be found at https://youtu.be/azFyHS0odcM <br>
+Achieves accuracy of 98% after 10 epochs of training <br>
+Requires data from http://yann.lecun.com/exdb/mnist/ <br>
 
 <h2> ReinforcementLearning/blackJack-no-es.py </h2>
 
