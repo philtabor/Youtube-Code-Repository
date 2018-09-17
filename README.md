@@ -18,7 +18,7 @@ Algorithm trains for 1,000,000 games and produces a win rate of around 42%, loss
 <h2> ReinforcementLearning/blackJack-off-policy.py </h2>
 
 Implementation of off policy Monte Carlo control in the blackjack environment from the OpenAI gym. <br>
-Video tutorial on this code can be found at https://youtu.be/TvO0Sa-6UVc <br>
+Video tutorial on this code can be found <a href="https://youtu.be/TvO0Sa-6UVc"> here </a> <br>
 Algorithm trains for 1,000,000 games and produces a win rate of around 29%, loss rate of 66% and draw rate of 5% <br>
 
 <h2> ReinforcementLearning/cartpole_qlearning.py </h2>
@@ -35,8 +35,8 @@ Video tutorial on this code can be found <a href="https://youtu.be/Q99bEPStnxk">
 
 <h2> ReinforcementLearning/sarsa.py </h2>
 
-Implementation of the SARSA algorithm in the cart pole environment. This is based on my course on reinforcement learning,  <br>
-which can be found <a href="https://github.com/philtabor/Reinforcement-Learning-In-Motion/tree/master/Unit-7-The-Cartpole"> here </a>
+Implementation of the SARSA algorithm in the cart pole environment. This is based on my course on reinforcement learning,  
+which can be found <a href="https://github.com/philtabor/Reinforcement-Learning-In-Motion/tree/master/Unit-7-The-Cartpole"> here </a> <br>
 Video tutorial on this code can be found <a href="https://youtu.be/P9XezMuPfLE"> here </a>  <br>
 
 
