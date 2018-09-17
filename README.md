@@ -5,7 +5,7 @@ You can find me at <a href="youtube.com/MachineLearningWithPhil"> Machine Learni
 <h2> CNN.py </h2>
 
 Simple implementation of a convolutional neural network in TensorFlow, version 1.5. <br>
-Video tutorial on this code can be found <a href="https://youtu.be/azFyHS0odcM"> here </a> <br>
+Video tutorial on this code can be found here https://youtu.be/azFyHS0odcM"> <br>
 Achieves accuracy of 98% after 10 epochs of training <br>
 Requires data from http://yann.lecun.com/exdb/mnist/ <br>
 
