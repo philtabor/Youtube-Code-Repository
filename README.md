@@ -2,7 +2,7 @@
 Repository for all the code from my youtube channel
 You can find me at https://youtube.com/MachineLearningWithPhil <br>
 
-<h2> DeepQLearning <h2>
+<h2> DeepQLearning </h2>
 
 My implementation of the Deep Q learning algorithm in PyTorch. Here we teach the algorithm to play the game of space invaders. I haven't had enough time to train this model yet, as it takes quite some time even on my 1080Ti / i7 7820k @ 4.4 GHz. I'll train 
 longer and provide a video on how well it does, at a later time.
