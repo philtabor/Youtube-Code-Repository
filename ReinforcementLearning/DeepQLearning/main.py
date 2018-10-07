@@ -1,5 +1,5 @@
 import gym
-from deepQModel import deepQNetwork
+from deepQModel import DeepQNetwork, Agent
 from utils import plotLearning
 import matplotlib.pyplot as plt
 import torch as T
@@ -7,8 +7,8 @@ import numpy as np
 
 if __name__ == '__main__':
     env = gym.make('SpaceInvaders-v0')
-    brain = deepQNetwork(gamma=0.9, epsilon=1.0, 
-                         alpha=0.003, maxMemorySize=2500)   
+    brain = Agent(gamma=0.95, epsilon=1.0, 
+                  alpha=0.003, maxMemorySize=5000)   
     while brain.memCntr < brain.memSize:
         observation = env.reset()
         done = False
@@ -25,20 +25,23 @@ if __name__ == '__main__':
 
     scores = []
     epsHistory = []
-    numGames = 250
+    numGames = 100
+    batch_size=32
+
     for i in range(numGames):
-        print('starting game ', i+1, 'epsilon: ', brain.EPSILON)
+        print('starting game ', i+1, 'epsilon: %.4f' % brain.EPSILON)
         epsHistory.append(brain.EPSILON)        
         done = False
         observation = env.reset()
         frames = [np.sum(observation[15:200,30:125], axis=2)]
-        score = 0        
+        score = 0
+        lastAction = 0   
         while not done:
             if len(frames) == 3:
                 action = brain.chooseAction(frames)
                 frames = []
             else:
-                action = 0
+                action = lastAction
             observation_, reward, done, info = env.step(action)
             score += reward
             frames.append(np.sum(observation_[15:200,30:125], axis=2))
@@ -47,11 +50,12 @@ if __name__ == '__main__':
             brain.storeTransition(np.mean(observation[15:200,30:125], axis=2), action, reward, 
                                   np.mean(observation_[15:200,30:125], axis=2))
             observation = observation_            
-            brain.learn(batch_size=24)
-            #env.render()
+            brain.learn(batch_size, i)
+            lastAction = action
+            #env.render(
         scores.append(score)
         print('score:',score)
     x = [i+1 for i in range(numGames)]
     fileName = str(numGames) + 'Games' + 'Gamma' + str(brain.GAMMA) + \
                'Alpha' + str(brain.ALPHA) + 'Memory' + str(brain.memSize)+ '.png'    
-    plotLearning(x, scores, epsHistory, fileName)
+    plotLearning(x, scores, epsHistory, fileName)    
