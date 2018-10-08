@@ -8,7 +8,8 @@ import numpy as np
 if __name__ == '__main__':
     env = gym.make('SpaceInvaders-v0')
     brain = Agent(gamma=0.95, epsilon=1.0, 
-                  alpha=0.003, maxMemorySize=5000)   
+                  alpha=0.003, maxMemorySize=5000,
+                  replace=None)   
     while brain.memCntr < brain.memSize:
         observation = env.reset()
         done = False
@@ -58,4 +59,7 @@ if __name__ == '__main__':
     x = [i+1 for i in range(numGames)]
     fileName = str(numGames) + 'Games' + 'Gamma' + str(brain.GAMMA) + \
                'Alpha' + str(brain.ALPHA) + 'Memory' + str(brain.memSize)+ '.png'    
-    plotLearning(x, scores, epsHistory, fileName)    
+    plotLearning(x, scores, epsHistory, fileName)
+
+    torch.save(brain.Q_next.state_dict(), 'TMP/Q_next/')  
+    torch.save(brain.Q_eval.state_dict(), 'TMP/Q_eval/')  
