@@ -82,12 +82,13 @@ class Agent(object):
         miniBatch=self.memory[memStart:memStart+batch_size]
         memory = np.array(miniBatch)
 
+        # convert to list because memory is an array of numpy objects
         Qpred = self.Q_eval.forward(list(memory[:,0][:])).to(self.Q_eval.device)
-        Qnext = self.Q_next.forward(list(memory[:,3][:])).to(self.Q_eval.device)
-
+        Qnext = self.Q_next.forward(list(memory[:,3][:])).to(self.Q_eval.device)       
+        
         maxA = T.argmax(Qnext, dim=1).to(self.Q_eval.device) 
-        Qtarget = Qpred
         rewards = T.Tensor(list(memory[:,2])).to(self.Q_eval.device)        
+        Qtarget = Qpred        
         Qtarget[:,maxA] = rewards + self.GAMMA*T.max(Qnext[1])
         
         if self.steps > 500:
