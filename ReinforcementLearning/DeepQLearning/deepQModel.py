@@ -76,7 +76,7 @@ class Agent(object):
             self.Q_next.load_state_dict(self.Q_eval.state_dict())
 
         if self.memCntr+batch_size < self.memSize:            
-            memStart = int(np.random.choice(range(self.memCntr-batch_size-1)))
+            memStart = int(np.random.choice(range(self.memCntr)))
         else:
             memStart = int(np.random.choice(range(self.memSize-batch_size-1)))
         miniBatch=self.memory[memStart:memStart+batch_size]
@@ -97,7 +97,7 @@ class Agent(object):
             else:
                 self.EPSILON = self.EPS_END
 
-        Qpred.requires_grad_()
+        #Qpred.requires_grad_()        
         loss = self.Q_eval.loss(Qtarget, Qpred).to(self.Q_eval.device)
         loss.backward()
         self.Q_eval.optimizer.step()
