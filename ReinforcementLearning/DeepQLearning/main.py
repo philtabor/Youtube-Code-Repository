@@ -1,8 +1,6 @@
 import gym
 from deepQModel import DeepQNetwork, Agent
 from utils import plotLearning
-import matplotlib.pyplot as plt
-import torch as T
 import numpy as np 
 
 if __name__ == '__main__':
@@ -26,7 +24,7 @@ if __name__ == '__main__':
 
     scores = []
     epsHistory = []
-    numGames = 100
+    numGames = 50
     batch_size=32
 
     for i in range(numGames):
@@ -51,7 +49,7 @@ if __name__ == '__main__':
             brain.storeTransition(np.mean(observation[15:200,30:125], axis=2), action, reward, 
                                   np.mean(observation_[15:200,30:125], axis=2))
             observation = observation_            
-            brain.learn(batch_size, i)
+            brain.learn(batch_size)
             lastAction = action
             #env.render(
         scores.append(score)
@@ -61,5 +59,5 @@ if __name__ == '__main__':
                'Alpha' + str(brain.ALPHA) + 'Memory' + str(brain.memSize)+ '.png'    
     plotLearning(x, scores, epsHistory, fileName)
 
-    torch.save(brain.Q_next.state_dict(), 'TMP/Q_next/')  
-    torch.save(brain.Q_eval.state_dict(), 'TMP/Q_eval/')  
+    #T.save(brain.Q_next.state_dict(), 'TMP/Q_next/')  
+    #T.save(brain.Q_eval.state_dict(), 'TMP/Q_eval/')  
