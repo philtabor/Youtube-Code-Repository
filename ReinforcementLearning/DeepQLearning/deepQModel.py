@@ -23,14 +23,14 @@ class DeepQNetwork(nn.Module):
     def forward(self, observation):
         observation = T.Tensor(observation).to(self.device)        
         #observation = observation.view(-1, 3, 210, 160).to(self.device)        
-        observation = observation.view(-1, 1, 185, 95).to(self.device)        
-        observation = F.relu(self.conv1(observation)).to(self.device)        
-        observation = F.relu(self.conv2(observation)).to(self.device)        
-        observation = F.relu(self.conv3(observation)).to(self.device)    
+        observation = observation.view(-1, 1, 185, 95)      
+        observation = F.relu(self.conv1(observation))     
+        observation = F.relu(self.conv2(observation))       
+        observation = F.relu(self.conv3(observation))  
         #observation = observation.view(-1, 128*23*16).to(self.device)        
-        observation = observation.view(-1, 128*19*8).to(self.device)        
-        observation = F.relu(self.fc1(observation)).to(self.device)        
-        actions = self.fc2(observation).to(self.device)        
+        observation = observation.view(-1, 128*19*8)    
+        observation = F.relu(self.fc1(observation))  
+        actions = self.fc2(observation)
         return actions
 
 class Agent(object):
@@ -68,11 +68,10 @@ class Agent(object):
         self.steps += 1
         return action
     
-    def learn(self, batch_size, episode):
+    def learn(self, batch_size):
         self.Q_eval.optimizer.zero_grad()
         if self.replace_target_cnt is not None and \
            self.learn_step_counter % self.replace_target_cnt == 0:
-            print('replacing target network at episode', episode)
             self.Q_next.load_state_dict(self.Q_eval.state_dict())
 
         if self.memCntr+batch_size < self.memSize:            
