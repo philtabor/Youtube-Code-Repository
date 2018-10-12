@@ -2,6 +2,7 @@ import gym
 from deepQModel import DeepQNetwork, Agent
 from utils import plotLearning
 import numpy as np 
+from gym import wrappers
 
 if __name__ == '__main__':
     env = gym.make('SpaceInvaders-v0')
@@ -26,7 +27,8 @@ if __name__ == '__main__':
     epsHistory = []
     numGames = 50
     batch_size=32
-
+    # uncomment the line below to record every episode. 
+    # env = wrappers.Monitor(env, "tmp/space-invaders-1", video_callable=lambda episode_id: True, force=True)
     for i in range(numGames):
         print('starting game ', i+1, 'epsilon: %.4f' % brain.EPSILON)
         epsHistory.append(brain.EPSILON)        
@@ -58,6 +60,3 @@ if __name__ == '__main__':
     fileName = str(numGames) + 'Games' + 'Gamma' + str(brain.GAMMA) + \
                'Alpha' + str(brain.ALPHA) + 'Memory' + str(brain.memSize)+ '.png'    
     plotLearning(x, scores, epsHistory, fileName)
-
-    #T.save(brain.Q_next.state_dict(), 'TMP/Q_next/')  
-    #T.save(brain.Q_eval.state_dict(), 'TMP/Q_eval/')  
