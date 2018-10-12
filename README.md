@@ -2,12 +2,15 @@
 Repository for all the code from my youtube channel
 You can find me at https://youtube.com/MachineLearningWithPhil <br>
 
-<h2> DeepQLearning </h2>
+<h2> ReinforcementLearning/DeepQLearning </h2>
 
 My implementation of the Deep Q learning algorithm in PyTorch. Here we teach the algorithm to play the game of space invaders. I haven't had enough time to train this model yet, as it takes quite some time even on my 1080Ti / i7 7820k @ 4.4 GHz. I'll train 
 longer and provide a video on how well it does, at a later time.
 
-The blog post talking about how Deep Q learning works can be found at http://www.neuralnet.ai/coding-a-deep-q-network-in-pytorch/
+The blog post talking about how Deep Q learning works can be found at http://www.neuralnet.ai/coding-a-deep-q-network-in-pytorch/ <br>
+Video for this is at https://www.youtube.com/watch?v=RfNxXlO6BiA&t=2s
+
+
 
 <h2> CNN.py </h2>
 
