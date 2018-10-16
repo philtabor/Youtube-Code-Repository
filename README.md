@@ -2,9 +2,19 @@
 Repository for all the code from my youtube channel
 You can find me at https://youtube.com/MachineLearningWithPhil <br>
 
+<h2> Kaggle/Venus-Volcanoes </h2>
+
+My crude implementation of a convolutional neural network to perform image classification on data gathered <br>
+by the Magellan spacecraft. The data is horribly skewed, as most images do not contain a volcano. <br>
+This means we'll have to do some creative data engineering for our model training. <br>
+Please note that in the test set, 84.1% of the data is "no volcano", and our model returns <br>
+an accuracy of around 88%, which is better than a model that outputs straight 0s for predictions. <br>
+
+You can check out the video for this at https://youtu.be/Ki-xOKydQrY <br>
+
 <h2> ReinforcementLearning/DeepQLearning </h2>
 
-My implementation of the Deep Q learning algorithm in PyTorch. Here we teach the algorithm to play the game of space invaders. I haven't had enough time to train this model yet, as it takes quite some time even on my 1080Ti / i7 7820k @ 4.4 GHz. I'll train 
+My implementation of the Deep Q learning algorithm in PyTorch. Here we teach the algorithm to play the game of space invaders. I haven't had enough time to train this model yet, as it takes quite some time even on my 1080Ti / i7 7820k @ 4.4 GHz. I'll train
 longer and provide a video on how well it does, at a later time.
 
 The blog post talking about how Deep Q learning works can be found at http://www.neuralnet.ai/coding-a-deep-q-network-in-pytorch/ <br>
@@ -48,6 +58,3 @@ Video tutorial on this code can be found https://youtu.be/Q99bEPStnxk <br>
 Implementation of the SARSA algorithm in the cart pole environment. This is based on my course on reinforcement learning,  
 which can be found <a href="https://github.com/philtabor/Reinforcement-Learning-In-Motion/tree/master/Unit-7-The-Cartpole"> here </a> <br>
 Video tutorial on this code can be found at https://youtu.be/P9XezMuPfLE <br>
-
-
-
