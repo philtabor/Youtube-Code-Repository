@@ -11,7 +11,7 @@ Please note that in the test set, 84.1% of the data is "no volcano", and our mod
 an accuracy of around 88%, which is better than a model that outputs straight 0s for predictions. <br>
 
 You can check out the video for this at https://youtu.be/Ki-xOKydQrY <br>
-
+You can find the data for this project at https://www.kaggle.com/fmena14/volcanoesvenus/home
 <h2> ReinforcementLearning/DeepQLearning </h2>
 
 My implementation of the Deep Q learning algorithm in PyTorch. Here we teach the algorithm to play the game of space invaders. I haven't had enough time to train this model yet, as it takes quite some time even on my 1080Ti / i7 7820k @ 4.4 GHz. I'll train
