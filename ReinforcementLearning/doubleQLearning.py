@@ -70,10 +70,10 @@ if __name__ == '__main__':
             s_ = getState(observation_)
             rand = np.random.random()
             if rand <= 0.5:
-                a_ = maxAction(Q1,Q1,s)
+                a_ = maxAction(Q1,Q1,s_)
                 Q1[s,a] = Q1[s,a] + ALPHA*(reward + GAMMA*Q2[s_,a_] - Q1[s,a])
             elif rand > 0.5:
-                a_ = maxAction(Q2,Q2,s)
+                a_ = maxAction(Q2,Q2,s_)
                 Q2[s,a] = Q2[s,a] + ALPHA*(reward + GAMMA*Q1[s_,a_] - Q2[s,a])
             observation = observation_
         EPS -= 2/(numGames) if EPS > 0 else 0
