@@ -56,8 +56,6 @@ class GridWorld(object):
         else:
             return False
 
-
-
     def step(self, action):
         agentX, agentY = self.getAgentRowAndColumn()
         resultingState = self.agentPosition + self.actionSpace[action]
@@ -108,7 +106,7 @@ def maxAction(Q, state, actions):
 
 if __name__ == '__main__':
     # map magic squares to their connecting square
-    magicSquares = {18: 54, 43: 65}
+    magicSquares = {18: 54, 63: 14}
     env = GridWorld(9, 9, magicSquares)
     # model hyperparameters
     ALPHA = 0.1
