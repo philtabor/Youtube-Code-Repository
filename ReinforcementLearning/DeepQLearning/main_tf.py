@@ -25,20 +25,20 @@ def stack_frames(stacked_frames, frame, buffer_size):
 if __name__ == '__main__':
     env = gym.make('Breakout-v0')
     load_checkpoint = True
-    agent = Agent(gamma=0.99, epsilon=0.01, alpha=0.00025, input_dims=(180,160,4),
+    agent = Agent(gamma=0.99, epsilon=1.0, alpha=0.00025, input_dims=(180,160,4),
                   n_actions=3, mem_size=25000, batch_size=32)
     if load_checkpoint:
         agent.load_models()
     filename = 'breakout-alpha0p000025-gamma0p99-only-one-fc.png'
     scores = []
     eps_history = []
-    numGames = 20
+    numGames = 5000
     stack_size = 4
     score = 0
     # uncomment the line below to record every episode.
     #env = wrappers.Monitor(env, "tmp/breakout-0",
     #                         video_callable=lambda episode_id: True, force=True)
-    """
+
     print("Loading up the agent's memory with random gameplay")
 
     while agent.mem_cntr < 25000:
@@ -58,7 +58,7 @@ if __name__ == '__main__':
                                    reward, observation_, int(done))
             observation = observation_
     print("Done with random gameplay. Game on.")
-    """
+
     for i in range(numGames):
         done = False
         if i % 10 == 0 and i > 0:
@@ -66,7 +66,7 @@ if __name__ == '__main__':
             print('episode: ', i,'score: ', score,
                  ' average score %.3f' % avg_score,
                 'epsilon %.3f' % agent.epsilon)
-            #agent.save_models()
+            agent.save_models()
         else:
             print('episode: ', i,'score: ', score)
 
@@ -86,7 +86,7 @@ if __name__ == '__main__':
             agent.store_transition(observation, action,
                                    reward, observation_, int(done))
             observation = observation_
-            #agent.learn()
+            agent.learn()
 
         eps_history.append(agent.epsilon)
         scores.append(score)
