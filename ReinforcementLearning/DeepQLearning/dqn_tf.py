@@ -3,7 +3,7 @@ import tensorflow as tf
 import numpy as np
 
 class DeepQNetwork(object):
-    def __init__(self, lr, n_actions, name, fc1_dims=256,
+    def __init__(self, lr, n_actions, name, fc1_dims=1024,
                  input_dims=(210,160,4), chkpt_dir='tmp/dqn'):
         self.lr = lr
         self.n_actions = n_actions
@@ -55,9 +55,9 @@ class DeepQNetwork(object):
             self.Q_values = tf.layers.dense(dense1, units=self.n_actions,
                     kernel_initializer=tf.variance_scaling_initializer(scale=2))
 
-            self.q = tf.reduce_sum(tf.multiply(self.Q_values, self.actions))
+            #self.q = tf.reduce_sum(tf.multiply(self.Q_values, self.actions))
 
-            self.loss = tf.reduce_mean(tf.square(self.q - self.q_target))
+            self.loss = tf.reduce_mean(tf.square(self.Q_values - self.q_target))
 
             self.train_op = tf.train.AdamOptimizer(self.lr).minimize(self.loss)
 
@@ -71,7 +71,7 @@ class DeepQNetwork(object):
 
 class Agent(object):
     def __init__(self, alpha, gamma, mem_size, n_actions, epsilon, batch_size,
-                 replace_target=5000, input_dims=(210,160,4),
+                 replace_target=10000, input_dims=(210,160,4),
                  q_next_dir='tmp/q_next', q_eval_dir='tmp/q_eval'):
         self.action_space = [i for i in range(n_actions)]
         self.n_actions = n_actions
@@ -109,7 +109,7 @@ class Agent(object):
             action = np.random.choice(self.action_space)
         else:
             actions = self.q_eval.sess.run(self.q_eval.Q_values,
-                      feed_dict={self.q_eval.input: state})
+                      feed_dict={self.q_eval.input: state} )
             action = np.argmax(actions)
         return action
 
@@ -120,6 +120,7 @@ class Agent(object):
         max_mem = self.mem_cntr if self.mem_cntr < self.mem_size else self.mem_size
 
         batch = np.random.choice(max_mem, self.batch_size)
+
         state_batch = self.state_memory[batch]
         action_batch = self.action_memory[batch]
         action_values = np.array([0, 1, 2], dtype=np.int8)
@@ -134,20 +135,23 @@ class Agent(object):
                                 feed_dict={self.q_next.input: new_state_batch})
 
         q_target = q_eval.copy()
-
-        q_target[:, action_indices] = reward_batch + \
+        idx = np.arange(self.batch_size)
+        q_target[idx, action_indices] = reward_batch + \
                                 self.gamma*np.max(q_next, axis=1)*terminal_batch
+
+        #q_target = np.zeros(self.batch_size)
+        #q_target = reward_batch + self.gamma*np.max(q_next, axis=1)*terminal_batch
 
         _ = self.q_eval.sess.run(self.q_eval.train_op,
                         feed_dict={self.q_eval.input: state_batch,
                                    self.q_eval.actions: action_batch,
                                    self.q_eval.q_target: q_target})
 
-        if self.mem_cntr > 100000:
-            if self.epsilon > 0.01:
-                self.epsilon *= 0.9999999
-            elif self.epsilon <= 0.01:
-                self.epsilon = 0.01
+        if self.mem_cntr > 25000:#200000:
+            if self.epsilon > 0.05:
+                self.epsilon -= 4e-7
+            elif self.epsilon <= 0.05:
+                self.epsilon = 0.05
 
     def save_models(self):
         self.q_eval.save_checkpoint()
