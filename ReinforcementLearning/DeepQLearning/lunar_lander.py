@@ -52,5 +52,5 @@ if __name__ == '__main__':
         eps_history.append(agent.epsilon)
         scores.append(score)
 
-    x = [i+1 for i in range(numGames)]
+    x = [i+1 for i in range(n_games)]
     plotLearning(x, scores, eps_history, filename)
