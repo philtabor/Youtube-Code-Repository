@@ -1,4 +1,4 @@
-from ddpg_fanin import Agent
+from ddpg_torch import Agent
 import gym
 import numpy as np
 from utils import plotLearning
