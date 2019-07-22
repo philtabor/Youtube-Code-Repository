@@ -100,7 +100,7 @@ class Agent(object):
         self.action_memory[index] = actions
         self.reward_memory[index] = reward
         self.new_state_memory[index] = state_
-        self.terminal_memory[index] = terminal
+        self.terminal_memory[index] = 1 - terminal
         self.mem_cntr += 1
 
     def choose_action(self, state):
