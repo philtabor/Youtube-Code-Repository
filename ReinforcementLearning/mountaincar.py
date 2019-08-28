@@ -14,7 +14,7 @@ def get_state(observation):
 
     return (pos_bin, vel_bin)
 
-def maxAction(Q, state, actions=[0, 1, 2]):
+def max_action(Q, state, actions=[0, 1, 2]):
     values = np.array([Q[state,a] for a in actions])
     action = np.argmax(values)
 
@@ -23,10 +23,10 @@ def maxAction(Q, state, actions=[0, 1, 2]):
 if __name__ == '__main__':
     env = gym.make('MountainCar-v0')
     env._max_episode_steps = 1000
-    n_games = 100
+    n_games = 50000
     alpha = 0.1
     gamma = 0.99
-    eps = 0
+    eps = 1.0
 
     action_space = [0, 1, 2]
 
@@ -50,7 +50,7 @@ if __name__ == '__main__':
         done = False
         obs = env.reset()
         state = get_state(obs)
-        if i % 1000 == 0 and i > 0:
+        if i % 100 == 0 and i > 0:
             print('episode ', i, 'score ', score, 'epsilon %.3f' % eps)
         score = 0
         while not done:
