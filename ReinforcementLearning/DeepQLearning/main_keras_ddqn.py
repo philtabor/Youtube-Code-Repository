@@ -1,3 +1,8 @@
+import os
+# for keras the CUDA commands must come before importing the keras libraries
+os.environ['CUDA_DEVICE_ORDER'] = 'PCI_BUS_ID'
+os.environ['CUDA_VISIBLE_DEVICES'] = '0'
+os.environ['TF_FORCE_GPU_ALLOW_GROWTH'] = 'true'
 import gym
 from gym import wrappers
 import numpy as np
