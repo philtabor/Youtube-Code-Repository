@@ -1,6 +1,6 @@
 import numpy as np
 import gym
-from cnn_model import PolicyGradientAgent
+from reinforce_cnn_tf import PolicyGradientAgent
 from utils import plotLearning
 from gym import wrappers
 
