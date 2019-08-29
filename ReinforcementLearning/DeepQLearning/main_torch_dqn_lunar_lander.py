@@ -14,7 +14,8 @@ if __name__ == '__main__':
     num_games = 500
     score = 0
     # uncomment the line below to record every episode.
-    #env = wrappers.Monitor(env, "tmp/space-invaders-1", video_callable=lambda episode_id: True, force=True)
+    #env = wrappers.Monitor(env, "tmp/space-invaders-1",
+    #video_callable=lambda episode_id: True, force=True)
     for i in range(num_games):
         if i % 10 == 0 and i > 0:
             avg_score = np.mean(scores[max(0, i-10):(i+1)])
