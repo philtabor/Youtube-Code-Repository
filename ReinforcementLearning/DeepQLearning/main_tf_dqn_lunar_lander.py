@@ -5,10 +5,12 @@ import numpy as np
 from gym import wrappers
 import matplotlib.pyplot as plt
 
+
 if __name__ == '__main__':
     env = gym.make('LunarLander-v2')
     lr = 0.0005
     n_games = 500
+
     agent = Agent(gamma=0.99, epsilon=1.0, alpha=lr, input_dims=[8],
                   n_actions=4, mem_size=1000000, n_games=n_games,
                   batch_size=64)
@@ -24,8 +26,8 @@ if __name__ == '__main__':
     eps_history = []
 
     score = 0
-    #env = wrappers.Monitor(env, "tmp/lunar-lander-3",
-    #                         video_callable=lambda episode_id: True, force=True)
+    env = wrappers.Monitor(env, "tmp/lunar-lander-4",
+                             video_callable=lambda episode_id: True, force=True)
 
     for i in range(n_games):
         done = False
