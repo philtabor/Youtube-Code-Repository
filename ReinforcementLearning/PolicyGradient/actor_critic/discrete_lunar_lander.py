@@ -1,5 +1,5 @@
 import gym
-from actor_critic_discrete import NewAgent
+from torch_actor_critic_discrete import NewAgent
 from utils import plotLearning
 from gym import wrappers
 
