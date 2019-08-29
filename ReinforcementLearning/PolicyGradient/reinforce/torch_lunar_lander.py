@@ -1,6 +1,6 @@
 import numpy as np
 import gym
-from model_torch import PolicyGradientAgent
+from reinforce_torch import PolicyGradientAgent
 import matplotlib.pyplot as plt
 from utils import plotLearning
 from gym import wrappers
