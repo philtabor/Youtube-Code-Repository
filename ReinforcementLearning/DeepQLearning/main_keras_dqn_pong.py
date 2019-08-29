@@ -2,7 +2,7 @@ import numpy as np
 from dqn_keras import Agent
 from utils import plotLearning, make_env
 
-if __name__ == '__main__':    
+if __name__ == '__main__':
     env = make_env('PongNoFrameskip-v4')
 
     num_games = 500
@@ -51,5 +51,5 @@ if __name__ == '__main__':
 
         eps_history.append(agent.epsilon)
 
-    x = [i+1 for i in range(len(scores))]
+    x = [i+1 for i in range(num_games)]
     plot_learning_curve(x, scores, eps_history, filename)
