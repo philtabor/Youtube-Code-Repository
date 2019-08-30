@@ -15,10 +15,10 @@ class Agent(object):
         self.fc2_dims = layer2_size
         self.n_actions = n_actions
 
-        self.actor, self.critic, self.policy = self.build_policy_network()
+        self.actor, self.critic, self.policy = self.build_actor_critic_network()
         self.action_space = [i for i in range(n_actions)]
 
-    def build_policy_network(self):
+    def build_actor_critic_network(self):
         input = Input(shape=(self.input_dims,))
         delta = Input(shape=[1])
         dense1 = Dense(self.fc1_dims, activation='relu')(input)
