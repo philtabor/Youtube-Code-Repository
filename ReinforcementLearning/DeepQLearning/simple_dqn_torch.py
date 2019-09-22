@@ -90,7 +90,8 @@ class Agent(object):
             terminal_batch = T.Tensor(terminal_batch).to(self.Q_eval.device)
 
             q_eval = self.Q_eval.forward(state_batch).to(self.Q_eval.device)
-            q_target = self.Q_eval.forward(state_batch).to(self.Q_eval.device)
+            #q_target = self.Q_eval.forward(state_batch).to(self.Q_eval.device)
+            q_target = q_eval.clone()
             q_next = self.Q_eval.forward(new_state_batch).to(self.Q_eval.device)
 
             batch_index = np.arange(self.batch_size, dtype=np.int32)
