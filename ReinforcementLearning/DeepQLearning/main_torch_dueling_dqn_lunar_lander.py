@@ -49,4 +49,4 @@ if __name__ == '__main__':
         eps_history.append(agent.epsilon)
 
     x = [i+1 for i in range(num_games)]
-    plot_learning_curve(x, scores, eps_history, filename)
+    plotLearning(x, scores, eps_history, filename)
