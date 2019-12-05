@@ -97,7 +97,18 @@ class Agent(object):
             self.replace_target_network()
 
             q_eval = self.q_eval.predict(state)
+
             q_next = self.q_next.predict(new_state)
+
+            """
+            Thanks to Maximus-Kranic for pointing out this subtle bug.
+            q_next[done] = 0.0 works in Torch; it sets q_next to 0
+            for every index that done == 1. The behavior is different in
+            Keras, as you can verify by printing out q_next to the terminal
+            when done.any() == 1.
+            Despite this, the agent still manages to learn. Odd.
+            The correct implementation in Keras is to use q_next * (1-done)
+
             q_next[done] = 0.0
 
             q_target = q_eval[:]
@@ -105,7 +116,11 @@ class Agent(object):
             indices = np.arange(self.batch_size)
             q_target[indices, action] = reward + \
                                         self.gamma*np.max(q_next,axis=1)
-
+            """
+            q_target = q_eval[:]
+            indices = np.arange(self.batch_size)
+            q_target[indices, action] = reward + \
+                                    self.gamma*np.max(q_next, axis=1)*(1 - done)
             self.q_eval.train_on_batch(state, q_target)
 
             self.epsilon = self.epsilon - self.eps_dec \
