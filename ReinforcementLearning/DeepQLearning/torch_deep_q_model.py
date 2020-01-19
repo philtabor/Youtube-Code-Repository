@@ -87,7 +87,7 @@ class Agent(object):
 
         maxA = T.argmax(Qnext, dim=1).to(self.Q_eval.device)
         rewards = T.Tensor(list(memory[:,2])).to(self.Q_eval.device)
-        Qtarget = Qpred
+        Qtarget = Qpred.clone()
         indices = np.arange(batch_size)
         Qtarget[indices,maxA] = rewards + self.GAMMA*T.max(Qnext[1])
 
