@@ -4,12 +4,11 @@ import tensorflow.keras as keras
 from tensorflow.keras.layers import Dense
 
 class CriticNetwork(keras.Model):
-    def __init__(self, n_actions, fc1_dims=512, fc2_dims=512,
+    def __init__(self, fc1_dims=512, fc2_dims=512,
             name='critic', chkpt_dir='tmp/ddpg'):
         super(CriticNetwork, self).__init__()
         self.fc1_dims = fc1_dims
         self.fc2_dims = fc2_dims
-        self.n_actions = n_actions
 
         self.model_name = name
         self.checkpoint_dir = chkpt_dir

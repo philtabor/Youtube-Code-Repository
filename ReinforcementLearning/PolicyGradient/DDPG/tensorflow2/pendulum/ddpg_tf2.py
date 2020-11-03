@@ -6,14 +6,15 @@ from buffer import ReplayBuffer
 from networks import ActorNetwork, CriticNetwork
 
 class Agent:
-    def __init__(self, alpha=0.001, beta=0.002, input_dims=[8], env=None,
+    def __init__(self, input_dims, alpha=0.001, beta=0.002, env=None,
             gamma=0.99, n_actions=2, max_size=1000000, tau=0.005, 
-            fc1=512, fc2=512, batch_size=64):
+            fc1=400, fc2=300, batch_size=64, noise=0.1):
         self.gamma = gamma
         self.tau = tau
         self.memory = ReplayBuffer(max_size, input_dims, n_actions)
         self.batch_size = batch_size
         self.n_actions = n_actions
+        self.noise = noise
         self.max_action = env.action_space.high[0]
         self.min_action = env.action_space.low[0]
         
@@ -67,7 +68,7 @@ class Agent:
         actions = self.actor(state)
         if not evaluate:
             actions += tf.random.normal(shape=[self.n_actions],
-                    mean=0.0, stddev=0.1)
+                    mean=0.0, stddev=self.noise)
         # note that if the environment has an action > 1, we have to multiply by
         # max action at some point
         actions = tf.clip_by_value(actions, self.min_action, self.max_action)
@@ -110,7 +111,3 @@ class Agent:
             actor_network_gradient, self.actor.trainable_variables))
 
         self.update_network_parameters()
-
-
-
-
