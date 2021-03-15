@@ -1,3 +1,5 @@
+# Code is heavily inspired by Morvan Zhou's code. Please check out
+# his work at github.com/MorvanZhou/pytorch-A3C
 import gym
 import torch as T
 import torch.multiprocessing as mp
