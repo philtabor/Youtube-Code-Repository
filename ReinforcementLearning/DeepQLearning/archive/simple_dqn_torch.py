@@ -93,7 +93,7 @@ class Agent(object):
             #q_target = self.Q_eval.forward(state_batch).to(self.Q_eval.device)
             q_target = q_eval.clone()
             q_next = self.Q_eval.forward(new_state_batch).to(self.Q_eval.device)
-            
+
             batch_index = np.arange(self.batch_size, dtype=np.int32)
             q_target[batch_index, action_indices] = reward_batch + \
                                 self.GAMMA*T.max(q_next, dim=1)[0]*terminal_batch

@@ -11,9 +11,6 @@ class DeepQNetwork(object):
         self.fc1_dims = fc1_dims
         self.chkpt_dir = chkpt_dir
         self.input_dims = input_dims
-        #config = tf.ConfigProto()
-        #config.gpu_options.allow_growth=True
-        #self.sess = tf.Session(config=config)
         self.sess = tf.Session()
         self.build_network()
         self.sess.run(tf.global_variables_initializer())
@@ -84,7 +81,6 @@ class Agent(object):
         self.epsilon = epsilon
         self.batch_size = batch_size
         self.replace_target = replace_target
-        self.input_dims = input_dims
         self.q_next = DeepQNetwork(alpha, n_actions, input_dims=input_dims,
                                    name='q_next', chkpt_dir=q_next_dir)
         self.q_eval = DeepQNetwork(alpha, n_actions, input_dims=input_dims,
@@ -131,7 +127,6 @@ class Agent(object):
         action_indices = np.dot(action_batch, action_values)
         reward_batch = self.reward_memory[batch]
         new_state_batch = self.new_state_memory[batch]
-
         terminal_batch = self.terminal_memory[batch]
 
         q_eval = self.q_eval.sess.run(self.q_eval.Q_values,
