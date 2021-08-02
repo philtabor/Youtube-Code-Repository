@@ -40,7 +40,7 @@ class ReplayBuffer():
                                         dtype=np.float32)
         self.action_memory = np.zeros(self.mem_size, dtype=np.int32)
         self.reward_memory = np.zeros(self.mem_size, dtype=np.float32)
-        self.terminal_memory = np.zeros(self.mem_size, dtype=np.bool)
+        self.terminal_memory = np.zeros(self.mem_size, dtype=bool) #np.bool deprecated
 
     def store_transition(self, state, action, reward, state_, done):
         index = self.mem_cntr % self.mem_size
@@ -118,12 +118,10 @@ class Agent():
         q_target = q_pred.numpy()
         max_actions = tf.math.argmax(self.q_eval(states_), axis=1)
         
-        # improve on my solution!
-        for idx, terminal in enumerate(dones):
-            #if terminal:
-                #q_next[idx] = 0.0
-            q_target[idx, actions[idx]] = rewards[idx] + \
-                    self.gamma*q_next[idx, max_actions[idx]]*(1-int(dones[idx]))
+        # faster numpy implementation:
+        q_target[np.arange(self.batch_size),actions] = rewards + self.gamma * \
+                        q_next.numpy()[np.arange(self.batch_size),max_actions] * (1-dones)
+        
         self.q_eval.train_on_batch(states, q_target)
 
         self.epsilon = self.epsilon - self.eps_dec if self.epsilon > \
