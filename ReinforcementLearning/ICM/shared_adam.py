@@ -1,3 +1,6 @@
+# from Morvan Zhou's implementation:
+# https://github.com/MorvanZhou/pytorch-A3C
+
 import torch as T
 
 
