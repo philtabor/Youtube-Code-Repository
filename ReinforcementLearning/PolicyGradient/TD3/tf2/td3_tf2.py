@@ -5,7 +5,8 @@ from tensorflow.keras.layers import Dense
 from tensorflow.keras.optimizers import Adam
 import os
 
-class ReplayBuffer():
+
+class ReplayBuffer:
     def __init__(self, max_size, input_shape, n_actions):
         self.mem_size = max_size
         self.mem_cntr = 0
@@ -60,8 +61,10 @@ class CriticNetwork(keras.Model):
 
         return q
 
+
 class ActorNetwork(keras.Model):
-    def __init__(self, fc1_dims, fc2_dims, n_actions, name, chkpt_dir='tmp/td3'):
+    def __init__(self, fc1_dims, fc2_dims, n_actions, name,
+                 chkpt_dir='tmp/td3'):
         super(ActorNetwork, self).__init__()
         self.fc1_dims = fc1_dims
         self.fc2_dims = fc2_dims
@@ -74,7 +77,6 @@ class ActorNetwork(keras.Model):
         self.fc2 = Dense(self.fc2_dims, activation='relu')
         self.mu = Dense(self.n_actions, activation='tanh')
 
-
     def call(self, state):
         prob = self.fc1(state)
         prob = self.fc2(prob)
@@ -83,11 +85,12 @@ class ActorNetwork(keras.Model):
 
         return mu
 
-class Agent():
+
+class Agent:
     def __init__(self, alpha, beta, input_dims, tau, env,
-            gamma=0.99, update_actor_interval=2, warmup=1000,
-            n_actions=2, max_size=1000000, layer1_size=400,
-            layer2_size=300, batch_size=100, noise=0.1):
+                 gamma=0.99, update_actor_interval=2, warmup=1000,
+                 n_actions=2, max_size=1000000, layer1_size=400,
+                 layer2_size=300, batch_size=100, noise=0.1):
         self.gamma = gamma
         self.tau = tau
         self.max_action = env.action_space.high[0]
@@ -100,33 +103,34 @@ class Agent():
         self.n_actions = n_actions
         self.update_actor_iter = update_actor_interval
 
-        self.actor = ActorNetwork(layer1_size, layer2_size, 
-                                    n_actions=n_actions, name='actor')
+        self.actor = ActorNetwork(layer1_size, layer2_size,
+                                  n_actions=n_actions, name='actor')
 
-        self.critic_1 = CriticNetwork(layer1_size, layer2_size, 
-                                    n_actions=n_actions, name='critic_1')
+        self.critic_1 = CriticNetwork(layer1_size, layer2_size,
+                                      name='critic_1')
         self.critic_2 = CriticNetwork(layer1_size, layer2_size,
-                                    n_actions=n_actions, name='critic_2')
+                                      name='critic_2')
 
-        self.target_actor = ActorNetwork(layer1_size, layer2_size, 
-                                    n_actions=n_actions, name='target_actor')
-        self.target_critic_1 = CriticNetwork(layer1_size, layer2_size, 
-                                    n_actions=n_actions, name='target_critic_1')
-        self.target_critic_2 = CriticNetwork(layer1_size, layer2_size, 
-                                    n_actions=n_actions, name='target_critic_2')
+        self.target_actor = ActorNetwork(layer1_size, layer2_size,
+                                         n_actions=n_actions,
+                                         name='target_actor')
+        self.target_critic_1 = CriticNetwork(layer1_size, layer2_size,
+                                             name='target_critic_1')
+        self.target_critic_2 = CriticNetwork(layer1_size, layer2_size,
+                                             name='target_critic_2')
 
         self.actor.compile(optimizer=Adam(learning_rate=alpha), loss='mean')
-        self.critic_1.compile(optimizer=Adam(learning_rate=beta), 
+        self.critic_1.compile(optimizer=Adam(learning_rate=beta),
                               loss='mean_squared_error')
-        self.critic_2.compile(optimizer=Adam(learning_rate=beta), 
+        self.critic_2.compile(optimizer=Adam(learning_rate=beta),
                               loss='mean_squared_error')
 
-        self.target_actor.compile(optimizer=Adam(learning_rate=alpha), 
+        self.target_actor.compile(optimizer=Adam(learning_rate=alpha),
                                   loss='mean')
-        self.target_critic_1.compile(optimizer=Adam(learning_rate=beta), 
-                              loss='mean_squared_error')
-        self.target_critic_2.compile(optimizer=Adam(learning_rate=beta), 
-                              loss='mean_squared_error')
+        self.target_critic_1.compile(optimizer=Adam(learning_rate=beta),
+                                     loss='mean_squared_error')
+        self.target_critic_2.compile(optimizer=Adam(learning_rate=beta),
+                                     loss='mean_squared_error')
 
         self.noise = noise
         self.update_network_parameters(tau=1)
@@ -136,7 +140,8 @@ class Agent():
             mu = np.random.normal(scale=self.noise, size=(self.n_actions,))
         else:
             state = tf.convert_to_tensor([observation], dtype=tf.float32)
-            mu = self.actor(state)[0] # returns a batch size of 1, want a scalar array
+            # returns a batch size of 1, want a scalar array
+            mu = self.actor(state)[0]
         mu_prime = mu + np.random.normal(scale=self.noise)
 
         mu_prime = tf.clip_by_value(mu_prime, self.min_action, self.max_action)
@@ -149,10 +154,10 @@ class Agent():
 
     def learn(self):
         if self.memory.mem_cntr < self.batch_size:
-            return 
+            return
 
         states, actions, rewards, new_states, dones = \
-                self.memory.sample_buffer(self.batch_size)
+            self.memory.sample_buffer(self.batch_size)
 
         states = tf.convert_to_tensor(states, dtype=tf.float32)
         actions = tf.convert_to_tensor(actions, dtype=tf.float32)
@@ -162,11 +167,11 @@ class Agent():
         with tf.GradientTape(persistent=True) as tape:
             target_actions = self.target_actor(states_)
             target_actions = target_actions + \
-                    tf.clip_by_value(np.random.normal(scale=0.2), -0.5, 0.5)
+                tf.clip_by_value(np.random.normal(scale=0.2), -0.5, 0.5)
 
-            target_actions = tf.clip_by_value(target_actions, self.min_action, 
-                                          self.max_action)
-        
+            target_actions = tf.clip_by_value(target_actions, self.min_action,
+                                              self.max_action)
+
             q1_ = self.target_critic_1(states_, target_actions)
             q2_ = self.target_critic_2(states_, target_actions)
 
@@ -182,23 +187,19 @@ class Agent():
             # and eager exection doesn't support assignment, so we can't do
             # q1_[dones] = 0.0
             target = rewards + self.gamma*critic_value_*(1-dones)
-            #critic_1_loss = tf.math.reduce_mean(tf.math.square(target - q1))
-            #critic_2_loss = tf.math.reduce_mean(tf.math.square(target - q2))
             critic_1_loss = keras.losses.MSE(target, q1)
             critic_2_loss = keras.losses.MSE(target, q2)
 
-
-        critic_1_gradient = tape.gradient(critic_1_loss, 
+        critic_1_gradient = tape.gradient(critic_1_loss,
                                           self.critic_1.trainable_variables)
-        critic_2_gradient = tape.gradient(critic_2_loss, 
+        critic_2_gradient = tape.gradient(critic_2_loss,
                                           self.critic_2.trainable_variables)
 
         self.critic_1.optimizer.apply_gradients(
-                       zip(critic_1_gradient, self.critic_1.trainable_variables))
+                   zip(critic_1_gradient, self.critic_1.trainable_variables))
         self.critic_2.optimizer.apply_gradients(
-                       zip(critic_2_gradient, self.critic_2.trainable_variables))
+                   zip(critic_2_gradient, self.critic_2.trainable_variables))
 
-        
         self.learn_step_cntr += 1
 
         if self.learn_step_cntr % self.update_actor_iter != 0:
@@ -209,7 +210,8 @@ class Agent():
             critic_1_value = self.critic_1(states, new_actions)
             actor_loss = -tf.math.reduce_mean(critic_1_value)
 
-        actor_gradient = tape.gradient(actor_loss, self.actor.trainable_variables)
+        actor_gradient = tape.gradient(actor_loss,
+                                       self.actor.trainable_variables)
         self.actor.optimizer.apply_gradients(
                         zip(actor_gradient, self.actor.trainable_variables))
 
@@ -250,7 +252,6 @@ class Agent():
         self.target_critic_2.save_weights(self.target_critic_2.checkpoint_file)
 
     def load_models(self):
-        
         print('... loading models ...')
         self.actor.load_weights(self.actor.checkpoint_file)
         self.critic_1.load_weights(self.critic_1.checkpoint_file)
@@ -258,5 +259,3 @@ class Agent():
         self.target_actor.load_weights(self.target_actor.checkpoint_file)
         self.target_critic_1.load_weights(self.target_critic_1.checkpoint_file)
         self.target_critic_2.load_weights(self.target_critic_2.checkpoint_file)
-
-
