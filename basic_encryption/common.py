@@ -1,6 +1,7 @@
 import random
 
 
+# https://stackoverflow.com/questions/7001144/range-over-character-in-python
 def character_generator(start_char, stop_char):
     for char in range(ord(start_char), ord(stop_char)+1):
         yield chr(char)
