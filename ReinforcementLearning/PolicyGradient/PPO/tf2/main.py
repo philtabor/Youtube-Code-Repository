@@ -11,7 +11,7 @@ if __name__ == '__main__':
     alpha = 0.0003
     agent = Agent(n_actions=env.action_space.n, batch_size=batch_size,
                   alpha=alpha, n_epochs=n_epochs,
-                  input_dims=env.observation_space.shape)
+                  input_dims=env.observation_space.shape[0])
     n_games = 300
 
     figure_file = 'plots/cartpole.png'
