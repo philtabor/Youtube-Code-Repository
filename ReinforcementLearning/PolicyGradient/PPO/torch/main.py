@@ -42,7 +42,7 @@ if __name__ == '__main__':
 
         if avg_score > best_score:
             best_score = avg_score
-            agent.save_models()
+            # agent.save_models()
 
         print('episode', i, 'score %.1f' % score, 'avg score %.1f' % avg_score,
                 'time_steps', n_steps, 'learning_steps', learn_iters)

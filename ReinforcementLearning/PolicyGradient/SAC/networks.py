@@ -137,4 +137,3 @@ class ActorNetwork(nn.Module):
 
     def load_checkpoint(self):
         self.load_state_dict(T.load(self.checkpoint_file))
-
