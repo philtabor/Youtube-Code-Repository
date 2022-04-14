@@ -21,7 +21,6 @@ class Agent:
 
         action_probabilities = tfp.distributions.Categorical(probs=probs)
         action = action_probabilities.sample()
-        log_prob = action_probabilities.log_prob(action)
         self.action = action
 
         return action.numpy()[0]
