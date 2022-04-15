@@ -42,11 +42,23 @@ if __name__ == '__main__':
 
         if avg_score > best_score:
             best_score = avg_score
-            # agent.save_models()
+            agent.save_models()
 
         print('episode', i, 'score %.1f' % score, 'avg score %.1f' % avg_score,
                 'time_steps', n_steps, 'learning_steps', learn_iters)
     x = [i+1 for i in range(len(score_history))]
     plot_learning_curve(x, score_history, figure_file)
+    import pandas as pd
+    pd.DataFrame(score_history).to_csv('result_PPO.csv')
 
+    # # play the video
+    agent.load_models()
+    done = False
+    state = env.reset()
+    while True:
+        action, prob, val = agent.choose_action(state)
+        state, _, done, _ = env.step(action)
+        env.render()
+        if done:
+            env.reset()
 
