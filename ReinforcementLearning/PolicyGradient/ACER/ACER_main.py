@@ -5,7 +5,7 @@ import matplotlib.pyplot as plt
 
 if __name__== '__main__':
     env = gym.make('CartPole-v1')
-    N = 20
+    N = 1000
     batch_size = 32
     alpha = 0.0003
     agent = Agent(lr = alpha, input_dims = env.observation_space.shape[0], action_dims = env.action_space.n)
@@ -21,9 +21,9 @@ if __name__== '__main__':
         score = 0
         done = False
         while not done:
-            action = agent.choose_action(state)
+            action, log_prob = agent.choose_action(state)
             next_state,reward,done,info = env.step(action)
-            agent.memory.append((state,reward,next_state,done))
+            agent.memory.append((state,log_prob,reward,next_state,done))
             state = next_state
             score += reward
         score_history.append(score)

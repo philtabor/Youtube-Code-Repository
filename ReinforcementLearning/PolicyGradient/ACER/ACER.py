@@ -84,7 +84,7 @@ class Agent():
         action_dist = Categorical(probs)
         action = action_dist.sample()
 
-        return action.item()
+        return action.item(),torch.log(probs).detach().cpu().numpy()
 
     def load_model(self,):
         print('....loading model....')
@@ -103,19 +103,19 @@ class Agent():
 
         transitions = random.sample(self.memory,self.batch_size)
         states = torch.tensor([t[0] for t in transitions]).to(self.critic.device)
-        # probs = torch.tensor([t[1] for t in transitions]).to(self.critic.device)
+        probs = torch.tensor([t[1] for t in transitions]).to(self.critic.device)
         rewards = torch.tensor([t[1] for t in transitions]).to(self.critic.device)
         next_states = torch.tensor([t[2] for t in transitions]).to(self.critic.device)
         dones = torch.tensor([t[3] for t in transitions]).to(self.critic.device)
 
         Vs = self.critic.forward(states)
-        next_Vs = self.critic.forward(next_states)
+        next_Vs = self.critic_target.forward(next_states)
 
         next_Vs[dones] = 0
 
         delta = rewards+self.gamma*next_Vs
 
-        actor_loss = -torch.mean(delta -  Vs)
+        actor_loss = -torch.mean(probs*(delta -  Vs))
         critic_loss = F.mse_loss(delta,Vs)
         
         (actor_loss+critic_loss).backward()
