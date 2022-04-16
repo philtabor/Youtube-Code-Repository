@@ -1,11 +1,13 @@
+from audioop import avg
 import gym
 import numpy as np
-from ACER import Agent
+from ACER_online import Agent
 import matplotlib.pyplot as plt
+import os
 
 if __name__== '__main__':
+    print(os.system('pwd'))
     env = gym.make('CartPole-v1')
-    N = 1000
     batch_size = 32
     alpha = 0.0003
     agent = Agent(lr = alpha, input_dims = env.observation_space.shape[0], action_dims = env.action_space.n)
@@ -14,16 +16,17 @@ if __name__== '__main__':
     score_history = []
     learn_iters = 0
     avg_score = 0
-    n_games = 100000
+    n_games = 2000
 
     for i in range(n_games):
         state = env.reset()
         score = 0
         done = False
         while not done:
-            action, log_prob = agent.choose_action(state)
+            action = agent.choose_action(state)
             next_state,reward,done,info = env.step(action)
-            agent.memory.append((state,log_prob,reward,next_state,done))
+            agent.memory.append((state,action,reward,next_state,done))
+            # agent.learn()
             state = next_state
             score += reward
         score_history.append(score)
@@ -32,13 +35,21 @@ if __name__== '__main__':
         if avg_score>best_score:
             best_score = avg_score
             agent.save_model()
-        if i%N == 0:
-            agent.actor_target.load_state_dict(agent.actor.state_dict())
-            agent.critic_target.load_state_dict(agent.critic.state_dict())
-
-        print(f'episode {i} score: {score} ave_score: {avg_score} ')
+        agent.memory.clear()
+        print(f'episode {i} score: {score} ave_score: {avg_score} memory_buffer {len(agent.memory)}')
+        if avg_score>=500:
+            break
     
     plt.plot(score_history)
+    agent.load_model()
+    done = False
+    state = env.reset()
+    while True:
+        action= agent.choose_action(state)
+        state, _, done, _ = env.step(action)
+        env.render()
+        if done:
+            env.reset()
 
         
 

@@ -35,7 +35,9 @@ class ActorNetwork(nn.Module):
         x = self.relu(x)
         x = self.f3(x)
 
-        return x
+        probs = F.softmax(x)
+        action_dist = Categorical(probs)
+        return action_dist
     
 class CriticNetwork(nn.Module):
     def __init__(self,alpha,input_dims,f1_dims,f2_dims,chkpt_dir='model') -> None:
@@ -65,9 +67,10 @@ class CriticNetwork(nn.Module):
         return x
 
 class Agent():
-    def __init__(self,lr,input_dims,action_dims,gamma=0.99,l1_size=256,l2_size=256,bath_size=32,mem_size=1000000) -> None:
+    def __init__(self,lr,input_dims,action_dims,gamma=0.99,l1_size=256,l2_size=256,bath_size=32,mem_size=50000) -> None:
         self.gamma = gamma
         self.batch_size = bath_size
+        self.ephoch = 10
         self.memory = deque(maxlen=mem_size)
         self.actor = ActorNetwork(lr,input_dims,l1_size,l2_size,action_dims)
         self.actor_target = ActorNetwork(lr,input_dims,l1_size,l2_size,action_dims)
@@ -79,12 +82,9 @@ class Agent():
     
     def choose_action(self,observation):
         state = torch.tensor(observation,dtype=torch.float).to(self.actor.device)
-        probs = self.actor_target.forward(state)
-        probs = F.softmax(probs)
-        action_dist = Categorical(probs)
+        action_dist = self.actor.forward(state)
         action = action_dist.sample()
-
-        return action.item(),torch.log(probs).detach().cpu().numpy()
+        return action.item()
 
     def load_model(self,):
         print('....loading model....')
@@ -98,30 +98,34 @@ class Agent():
 
     def learn(self):
         if len(self.memory)<self.batch_size: return
-        self.critic.optimizer.zero_grad()
-        self.actor.optimizer.zero_grad()
 
-        transitions = random.sample(self.memory,self.batch_size)
+        transitions = self.memory
         states = torch.tensor([t[0] for t in transitions]).to(self.critic.device)
-        probs = torch.tensor([t[1] for t in transitions]).to(self.critic.device)
-        rewards = torch.tensor([t[1] for t in transitions]).to(self.critic.device)
-        next_states = torch.tensor([t[2] for t in transitions]).to(self.critic.device)
-        dones = torch.tensor([t[3] for t in transitions]).to(self.critic.device)
-
-        Vs = self.critic.forward(states)
-        next_Vs = self.critic_target.forward(next_states)
-
-        next_Vs[dones] = 0
-
-        delta = rewards+self.gamma*next_Vs
-
-        actor_loss = -torch.mean(probs*(delta -  Vs))
-        critic_loss = F.mse_loss(delta,Vs)
+        actions = torch.tensor([t[1] for t in transitions]).to(self.critic.device)
+        rewards = torch.tensor([t[2] for t in transitions]).to(self.critic.device).unsqueeze(1)
+        next_states = torch.tensor([t[3] for t in transitions]).to(self.critic.device)
+        dones = torch.tensor([t[4] for t in transitions]).to(self.critic.device)
         
-        (actor_loss+critic_loss).backward()
-        
-        self.actor.optimizer.step()
-        self.critic.optimizer.step()
+        for _ in range(self.ephoch):
+            self.critic.optimizer.zero_grad()
+            self.actor.optimizer.zero_grad()
+            
+            dist = self.actor.forward(states)
+
+            log_pobs = dist.log_prob(actions)
+
+            Vs = self.critic.forward(states)
+            next_Vs = self.critic.forward(next_states)
+
+            next_Vs[dones] = 0
+
+            delta = rewards+self.gamma*next_Vs
+            actor_loss = -torch.mean(log_pobs*(delta -  Vs))
+            critic_loss = F.mse_loss(delta,Vs)
+            (actor_loss+critic_loss).backward()
+
+            self.actor.optimizer.step()
+            self.critic.optimizer.step()
 
         
 
