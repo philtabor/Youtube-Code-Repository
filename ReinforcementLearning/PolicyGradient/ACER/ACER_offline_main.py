@@ -7,12 +7,12 @@ import os
 
 if __name__== '__main__':
     print(os.system('pwd'))
-    env = gym.make('CartPole-v1')
+    env = gym.make('LunarLanderContinuous-v2')
     batch_size = 32
     N = 10
     alpha = 0.0003
     tau = 0.001
-    agent = Agent(lr = alpha,tau=tau, input_dims = env.observation_space.shape[0], action_dims = env.action_space.n)
+    agent = Agent(lr = alpha,tau=tau, input_dims = env.observation_space.shape[0], action_dims = env.action_space.shape[0])
 
     best_score = env.reward_range[0]
     score_history = []
@@ -25,19 +25,19 @@ if __name__== '__main__':
         score = 0
         done = False
         while not done:
-            action = agent.choose_action(state).cpu().numpy()
+            action = agent.choose_action(state).detach().cpu().numpy()
             next_state,reward,done,info = env.step(action)
-            agent.memory.append((state,action-0.5,reward,next_state,done))
-            # agent.learn()
+            agent.memory.append((state,action,reward,next_state,done))
+            agent.learn()
             state = next_state
             score += reward
         score_history.append(score)
         avg_score = np.mean(score_history[-100:])
-        agent.learn()
+        # agent.learn()
         if avg_score>best_score:
             best_score = avg_score
             agent.save_model()
-        agent.memory.clear()
+        # agent.memory.clear()
         print(f'episode {i} score: {score} ave_score: {avg_score} memory_buffer {len(agent.memory)}')
         # if i%10==0:
         #     agent.update()

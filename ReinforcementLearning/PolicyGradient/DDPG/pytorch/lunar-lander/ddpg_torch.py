@@ -200,8 +200,8 @@ class Agent(object):
                                            layer2_size, n_actions=n_actions,
                                            name='TargetCritic')
 
-        # self.noise = OUActionNoise(mu=np.zeros(n_actions))
-        self.noise = np.random.normal(scale=0.1)
+        self.noise = OUActionNoise(mu=np.zeros(n_actions))
+        # self.noise = np.random.normal(scale=0.1)
 
         self.update_network_parameters(tau=1)
 
@@ -209,7 +209,7 @@ class Agent(object):
         self.actor.eval()
         observation = T.tensor(observation, dtype=T.float).to(self.actor.device)
         mu = self.actor.forward(observation).to(self.actor.device)
-        mu_prime = mu + T.tensor(self.noise,
+        mu_prime = mu + T.tensor(self.noise(),
                                  dtype=T.float).to(self.actor.device)
         self.actor.train()
         return mu_prime.cpu().detach().numpy()
@@ -301,6 +301,7 @@ class Agent(object):
             print(name, T.equal(param, critic_state_dict[name]))
         input()
         """
+        
     def save_models(self):
         self.actor.save_checkpoint()
         self.target_actor.save_checkpoint()

@@ -133,5 +133,6 @@ for step in itertools.count():
         print('Avg Rew', np.mean(reward_buffer))
     mean_reward_history.append(np.mean(reward_buffer))
     if step>=300:break
+    
 import pandas as pd
 pd.DataFrame(mean_reward_history).to_csv('result_DQN.csv')
