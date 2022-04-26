@@ -2,6 +2,7 @@ from ddpg_torch import Agent
 import gym
 import numpy as np
 from utils import plotLearning
+import pandas as pd
 
 env = gym.make('LunarLanderContinuous-v2')
 agent = Agent(alpha=0.000025, beta=0.00025, input_dims=[8], tau=0.001, env=env,
@@ -32,4 +33,6 @@ for i in range(1000):
           'trailing 100 games avg %.3f' % np.mean(score_history[-100:]))
 
 filename = 'LunarLander-alpha000025-beta00025-400-300.png'
+pd.DataFrame(score_history).to_csv('GA_result_DDPG.csv')
 plotLearning(score_history, filename, window=100)
+

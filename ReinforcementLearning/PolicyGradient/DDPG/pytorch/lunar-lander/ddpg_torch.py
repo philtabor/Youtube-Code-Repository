@@ -201,6 +201,7 @@ class Agent(object):
                                            name='TargetCritic')
 
         self.noise = OUActionNoise(mu=np.zeros(n_actions))
+        # self.noise = np.random.normal(scale=0.1)
 
         self.update_network_parameters(tau=1)
 
@@ -232,6 +233,7 @@ class Agent(object):
         self.target_actor.eval()
         self.target_critic.eval()
         self.critic.eval()
+
         target_actions = self.target_actor.forward(new_state)
         critic_value_ = self.target_critic.forward(new_state, target_actions)
         critic_value = self.critic.forward(state, action)
@@ -299,6 +301,7 @@ class Agent(object):
             print(name, T.equal(param, critic_state_dict[name]))
         input()
         """
+        
     def save_models(self):
         self.actor.save_checkpoint()
         self.target_actor.save_checkpoint()

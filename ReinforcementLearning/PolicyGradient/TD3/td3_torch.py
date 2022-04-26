@@ -41,7 +41,7 @@ class ReplayBuffer():
 
 class CriticNetwork(nn.Module):
     def __init__(self, beta, input_dims, fc1_dims, fc2_dims, n_actions,
-            name, chkpt_dir='tmp/td3'):
+            name, chkpt_dir='./tmp/td3'):
         super(CriticNetwork, self).__init__()
         self.input_dims = input_dims
         self.fc1_dims = fc1_dims
@@ -80,7 +80,7 @@ class CriticNetwork(nn.Module):
 
 class ActorNetwork(nn.Module):
     def __init__(self, alpha, input_dims, fc1_dims, fc2_dims,
-            n_actions, name, chkpt_dir='tmp/td3'):
+            n_actions, name, chkpt_dir='./tmp/td3'):
         super(ActorNetwork, self).__init__()
         self.input_dims = input_dims
         self.fc1_dims = fc1_dims
@@ -156,12 +156,12 @@ class Agent():
     def choose_action(self, observation):
         if self.time_step < self.warmup:
             mu = T.tensor(np.random.normal(scale=self.noise, 
-                                            size=(self.n_actions,)))
+                                            size=(self.n_actions,))).to(self.actor.device)
         else:
             state = T.tensor(observation, dtype=T.float).to(self.actor.device)
             mu = self.actor.forward(state).to(self.actor.device)
-        mu_prime = mu + T.tensor(np.random.normal(scale=self.noise),
-                                    dtype=T.float).to(self.actor.device)
+
+        mu_prime = mu + T.tensor(np.random.normal(scale=self.noise), dtype=T.float).to(self.actor.device)
 
         mu_prime = T.clamp(mu_prime, self.min_action[0], self.max_action[0])
         self.time_step += 1
@@ -278,6 +278,3 @@ class Agent():
         self.critic_2.load_checkpoint()
         self.target_critic_1.load_checkpoint()
         self.target_critic_2.load_checkpoint()
-
-
-

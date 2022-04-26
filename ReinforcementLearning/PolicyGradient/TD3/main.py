@@ -1,7 +1,10 @@
 import gym
 import numpy as np
+import pandas as pd
+
 from td3_torch import Agent
 from utils import plot_learning_curve
+import os
 
 if __name__ == '__main__':
     env = gym.make('LunarLanderContinuous-v2')
@@ -15,7 +18,9 @@ if __name__ == '__main__':
     best_score = env.reward_range[0]
     score_history = []
 
-    agent.load_models()
+    if len(os.listdir(path='./tmp/td3'))!=0:
+        print(os.listdir(path='./tmp/td3'))
+        agent.load_models()
 
     for i in range(n_games):
         observation = env.reset()
@@ -33,10 +38,11 @@ if __name__ == '__main__':
 
         if avg_score > best_score:
             best_score = avg_score
-            agent.save_models()
+            # agent.save_models()
 
         print('episode ', i, 'score %.1f' % score,
                 'average score %.1f' % avg_score)
 
     x = [i+1 for i in range(n_games)]
     plot_learning_curve(x, score_history, filename)
+    pd.DataFrame(score_history).to_csv('result_TD3.csv')

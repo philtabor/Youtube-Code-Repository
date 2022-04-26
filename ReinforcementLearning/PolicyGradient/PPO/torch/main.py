@@ -14,7 +14,7 @@ if __name__ == '__main__':
                     input_dims=env.observation_space.shape)
     n_games = 300
 
-    figure_file = 'plots/cartpole.png'
+    figure_file = './plots/cartpole.png'
 
     best_score = env.reward_range[0]
     score_history = []
@@ -48,5 +48,16 @@ if __name__ == '__main__':
                 'time_steps', n_steps, 'learning_steps', learn_iters)
     x = [i+1 for i in range(len(score_history))]
     plot_learning_curve(x, score_history, figure_file)
+    import pandas as pd
+    pd.DataFrame(score_history).to_csv('result_PPO.csv')
 
-
+    # # play the video
+    agent.load_models()
+    done = False
+    state = env.reset()
+    while True:
+        action, prob, val = agent.choose_action(state)
+        state, _, done, _ = env.step(action)
+        env.render()
+        if done:
+            env.reset()
