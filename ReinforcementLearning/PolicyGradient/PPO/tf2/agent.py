@@ -17,9 +17,9 @@ class Agent:
         self.gae_lambda = gae_lambda
         self.chkpt_dir = chkpt_dir
 
-        self.actor = ActorNetwork(n_actions)
+        self.actor = ActorNetwork(n_actions=n_actions, fc1_dims=input_dims)
         self.actor.compile(optimizer=Adam(learning_rate=alpha))
-        self.critic = CriticNetwork()
+        self.critic = CriticNetwork(fc1_dims=input_dims)
         self.critic.compile(optimizer=Adam(learning_rate=alpha))
         self.memory = PPOMemory(batch_size)
 
