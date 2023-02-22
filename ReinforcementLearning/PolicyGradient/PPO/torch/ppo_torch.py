@@ -160,7 +160,7 @@ class Agent:
                 for k in range(t, len(reward_arr)-1):
                     a_t += discount*(reward_arr[k] + self.gamma*values[k+1]*\
                             (1-int(dones_arr[k])) - values[k])
-                    discount *= self.gamma*self.gae_lambda
+                    discount = discount * self.gamma * self.gae_lambda * (1 - int(dones_arr[k])) + int(dones_arr[k])
                 advantage[t] = a_t
             advantage = T.tensor(advantage).to(self.actor.device)
 
