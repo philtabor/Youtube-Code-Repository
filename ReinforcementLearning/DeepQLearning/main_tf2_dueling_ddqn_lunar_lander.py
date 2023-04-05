@@ -22,11 +22,11 @@ if __name__ == '__main__':
             agent.store_transition(observation, action, reward, observation_, done)
             observation = observation_
             agent.learn()
-        eps_history.append(ddqn_agent.epsilon)
+        eps_history.append(agent.epsilon)
 
         ddqn_scores.append(score)
 
-        avg_score = np.mean(scores[-100:])
+        avg_score = np.mean(ddqn_scores[-100:])
         print('episode: ', i,'score: %.2f' % score,
               ' average score %.2f' % avg_score)
 
