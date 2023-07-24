@@ -12,13 +12,14 @@ np.random.seed(0)
 
 score_history = []
 for i in range(1000):
-    obs = env.reset()
+    obs, info = env.reset()
     done = False
+    truncated = False
     score = 0
-    while not done:
+    while not (done or truncated):
         act = agent.choose_action(obs)
-        new_state, reward, done, info = env.step(act)
-        agent.remember(obs, act, reward, new_state, int(done))
+        new_state, reward, done, truncated, info = env.step(act)
+        agent.remember(obs, act, reward, new_state, int(done or truncated))
         agent.learn()
         score += reward
         obs = new_state
